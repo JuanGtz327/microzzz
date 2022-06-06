@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Micros 3CV15</title>
+    <!-- BOOTSTRAP CDN -->
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <!-- FONT AWESOME -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+        integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <!-- CUSTOM CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <script src="socket.io/socket.io.js"></script>
+</head>
+
+<body>
+    <header class="container">
+        <br><br><br><br>
+        <div class="row">
+            <div class="col-sm-12 my-4">
+                <h1 class="text-center display-3 text-uppercase font-weight-bold mt-4">Proyecto Final</h1>
+            </div>
+            <div class="col-sm-6">
+                <img src="img/arduino1.png" class="img-fluid" style="height: 70%">
+            </div>
+            <div class="col-sm-6 text-center mt-5">
+                <p class="text-center text-description">Ingresa el texto a desplegar en la placa arduino :D</p>
+                <input class="form-control rounded-4 my-4 text-center" type="text" id="textInp" placeholder="Mensaje"
+                    style="background-color: white;">
+                <button type="submit" class="btn btn-outline-light rounded-1" onclick="showValue()" id="myBtn">
+                    ENVIAR DATOS
+                </button>
+                <div class="spinner-border visible" role="status" id="spin">
+                </div>
+            </div>
+        </div>
+    </header>
+    <script type="text/javascript">
+        var socket = io.connect();
+        function showValue() {
+            const text = document.getElementById("textInp").value;
+            const myBTN = document.getElementById("myBtn");
+            const mySPIN = document.getElementById("spin");
+            let index = 0;
+            const abc = setInterval(() => {
+                myBTN.classList.add('visible');
+                mySPIN.classList.remove('visible');
+                if (text[index] == undefined) {
+                    socket.emit('msg', { value: '\n' });
+                    clear();
+                } else {
+                    socket.emit('msg', { value: text[index] });
+                    index++;
+                }
+            }, 100);
+
+            function clear() {
+                mySPIN.classList.add('visible');
+                myBTN.classList.remove('visible');
+                clearInterval(abc);
+            }
+        }
+    </script>
+</body>
+
+</html>
